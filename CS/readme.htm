@@ -1,0 +1,71 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>How to drop an appointment from an external control onto an ASPxScheduler - Developer Express Example</title>
+<style>
+html, body, form
+{
+	font-family: Tahoma, Arial, Verdana;
+    font-size: small;
+    color: #303440;
+}
+h1 {
+	font-size: 125%;
+	font-weight: normal;
+	color: Black;
+	letter-spacing: 101%;
+}
+</style>
+</head>
+<body>
+<h1>Developer Express Example<br />How to drop an appointment from an external control onto an ASPxScheduler</h1>
+<p>This example illustrates how to drag and drop an item from an external control (ASPxGridView (http://documentation.devexpress.com/#AspNet/clsDevExpressWebASPxGridViewASPxGridViewtopic) in this example) to the ASPxScheduler area in order to create an appointment. Note that this example is an extended version of the http://www.devexpress.com/scid=E4292 code example. The advantage of this new example is that an appointment is created in a time cell to which a corresponding grid item is dropped, whereas in the previous example, the appointment time is taken from a grid row. To obtain the  current/active time cell, we use a non-documented CalcHitTest method. After that we initiate a custom callback to the server (see Callback Commands (http://documentation.devexpress.com/#AspNet/CustomDocument5462)) in order to create an appointment according to the current grid row and scheduler time cell. Note that the grid row Id and the selected resource Id are passed via a hidden field, whereas the current time is passed via the RaiseCallback method. This is done only to illustrate different approaches. It is enough to use only one approach (either a hidden field or the RaiseCallback method) if necessary. Here is some client-side code:
+
+        function InitalizejQuery(s, e) {
+            $('.draggable').draggable({ helper: 'clone', appendTo: 'body', zIndex: 100 });
+            $('.droppable').droppable({
+                    activeClass: "dropTargetActive",
+                    hoverClass: "dropTargetHover",
+                    
+                    drop: function (ev, ui) {
+                        // Make a clone of the dragged item
+                        var clone = (ui.draggable).clone();
+                        
+                        // Get a row index:
+                        row = $(clone).find("input[type='hidden']").val();
+                        hf.Set('row', row);
+
+                        // Calculate an active time cell
+                        var cell = scheduler.CalcHitTest(ev).cell;    
+                        
+                        // Initiate a scheduler callback to create an appointment based on a cell interval
+                        if (cell != null) {
+                            scheduler.InitializeCell(cell);
+                            hf.Set('res', cell.resource);
+                            scheduler.RaiseCallback('CRTAPT|' + _aspxGetInvariantDateTimeString(cell.interval.start));
+                        }
+                        else
+                            alert('Drop the dragged item on a specific time cell.');
+                        
+                        // Additional logic goes here...
+                    }
+                }
+             );
+        }
+
+We attach Draggable (http://jqueryui.com/draggable/) interaction from jQuery to a DIV within a grid cell template so that the DIV can be dragged. The DIV with the ASPxScheduler inside serves as a drop target. We attach Droppable (http://jqueryui.com/droppable/) interaction to it.
+
+The InitalizejQuery method is called from the client-side ControlsInitialized and EndCallback event handlers of the ASPxGlobalEvents Class (http://documentation.devexpress.com/#AspNet/clsDevExpressWebASPxGlobalEventsASPxGlobalEventstopic). It is a recommended technique to perform jQuery-related actions with our controls (see http://www.devexpress.com/scid=E3325).
+
+As for server-side code, the main work is performed in the CreateAppointmentCallbackCommand.CreateAppointment() method. We parse passed parameters in this method and create an appointment. Finally, we add the code to automatically invoke an appointment form as shown in the http://www.devexpress.com/scid=E3043 code example.
+
+Here is a screenshot that illustrates a sample application in action during our custom drag-and-drop operation:
+
+
+
+See Also: 
+http://www.devexpress.com/scid=E4708</p>
+<p>You can find sample updates and versions for different programming languages here:<br /><a href="http://www.devexpress.com/example=E4746">http://www.devexpress.com/example=E4746</a>.</p>
+</body>
+</html>
