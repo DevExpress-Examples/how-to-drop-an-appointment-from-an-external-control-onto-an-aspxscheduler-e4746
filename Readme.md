@@ -2,7 +2,7 @@
 *Files to look at*:
 
 * [SchedulerModel.cs](./CS/App_Code/SchedulerModel.cs) (VB: [SchedulerModel.vb](./VB/App_Code/SchedulerModel.vb))
-* [Default.aspx](./CS/Default.aspx) (VB: [Default.aspx.vb](./VB/Default.aspx.vb))
+* [Default.aspx](./CS/Default.aspx) (VB: [Default.aspx](./VB/Default.aspx))
 * [Default.aspx.cs](./CS/Default.aspx.cs) (VB: [Default.aspx.vb](./VB/Default.aspx.vb))
 <!-- default file list end -->
 # How to drop an appointment from an external control onto an ASPxScheduler
